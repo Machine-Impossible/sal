@@ -1,0 +1,6 @@
+<he.sala> # main() { 
+    $ aasish = 69.43; 
+    ~ skandan;
+    skandan = "jug"; 
+    '0;
+}
