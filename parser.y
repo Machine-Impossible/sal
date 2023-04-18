@@ -16,6 +16,9 @@
 	void fill(char *, float);
     struct node* mknode(struct node *left, struct node *right, char *token);
 
+	char QUADS[100][100];
+	int Q = 0;
+
     struct dataType {
         char * id_name;
         char * data_type;
@@ -112,7 +115,7 @@ condition_optional: AND condition { $$.nd = mknode($2.nd, NULL, $1.name); }
 ;
 
 statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($2.nd, $4.nd, "declaration"); $2.value = $4.value;temp_val = $2.value; fill($2.name, $2.value); }
-| ID ASSIGN expression  { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); $1.value = $3.value; fill($1.name, $1.value); }
+| ID ASSIGN expression  { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); $1.value = $3.value; fill($1.name, $1.value); char str[100]; sprintf(str, "%s = %s", $1.name, $3.name); strcpy(QUADS[Q], str); Q++; }
 | ID relop expression   { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); }
 ;
 
@@ -120,8 +123,8 @@ init: ASSIGN expression { $$.nd = $2.nd; $$.value = $2.value; }
 | { $$.nd = NULL; }
 ;
 
-expression: value arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); $$.value = calculate($1.value, $3.value, $2.name); }
-| value { $$.nd = $1.nd; $$.value = $1.value; }
+expression: value arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); $$.value = calculate($1.value, $3.value, $2.name); char str[100]; sprintf(str, "%s = %s %s %s", $$.name, $1.name, $2.name, $3.name); strcpy(QUADS[Q], str); Q++; }
+| value { $$.nd = $1.nd; $$.value = $1.value; char str[100]; sprintf(str, "%s = %s", $$.name, $1.name); strcpy(QUADS[Q], str); Q++; }
 ;
 
 arithmetic: ADD
@@ -203,6 +206,9 @@ int main() {
 	printf("\n\n");
 	printf("THREE ADDRESS CODE");
     printf("\n\n");
+	for(int j = 0; j < Q; j++){
+		printf("%s\n", QUADS[j]);
+	}
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);
 		free(symbol_table[i].type);
