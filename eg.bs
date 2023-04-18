@@ -1,6 +1,7 @@
 <he.sala> # main() { 
-    $ aasish = 69.43; 
-    ~ skandan;
-    skandan = "jug"; 
-    '0;
+    $ aasish = 6.2 + 4; 
+    aasish = aasish - 4;
+    # skandan = 8 - 3;
+    skandan = skandan * 2;
+    '5;
 }

@@ -63,35 +63,36 @@ extern int yydebug;
     BOOL = 264,                    /* BOOL  */
     RET = 265,                     /* RET  */
     FOR = 266,                     /* FOR  */
-    IF = 267,                      /* IF  */
-    ELSE = 268,                    /* ELSE  */
-    INCLUDE = 269,                 /* INCLUDE  */
-    T = 270,                       /* T  */
-    F = 271,                       /* F  */
-    NUM = 272,                     /* NUM  */
-    REAL = 273,                    /* REAL  */
-    ID = 274,                      /* ID  */
-    LE = 275,                      /* LE  */
-    GE = 276,                      /* GE  */
-    EQ = 277,                      /* EQ  */
-    NE = 278,                      /* NE  */
-    GT = 279,                      /* GT  */
-    LT = 280,                      /* LT  */
-    NOT = 281,                     /* NOT  */
-    AND = 282,                     /* AND  */
-    OR = 283,                      /* OR  */
-    ADD = 284,                     /* ADD  */
-    SUB = 285,                     /* SUB  */
-    DIV = 286,                     /* DIV  */
-    MULT = 287,                    /* MULT  */
-    ASSIGN = 288,                  /* ASSIGN  */
-    BRACES_OPEN = 289,             /* BRACES_OPEN  */
-    BRACES_CLOSE = 290,            /* BRACES_CLOSE  */
-    BRACKET_OPEN = 291,            /* BRACKET_OPEN  */
-    BRACKET_CLOSE = 292,           /* BRACKET_CLOSE  */
-    DELIM = 293,                   /* DELIM  */
-    COMM = 294,                    /* COMM  */
-    SENTENCE = 295                 /* SENTENCE  */
+    POW = 267,                     /* POW  */
+    IF = 268,                      /* IF  */
+    ELSE = 269,                    /* ELSE  */
+    INCLUDE = 270,                 /* INCLUDE  */
+    T = 271,                       /* T  */
+    F = 272,                       /* F  */
+    NUM = 273,                     /* NUM  */
+    REAL = 274,                    /* REAL  */
+    ID = 275,                      /* ID  */
+    LE = 276,                      /* LE  */
+    GE = 277,                      /* GE  */
+    EQ = 278,                      /* EQ  */
+    NE = 279,                      /* NE  */
+    GT = 280,                      /* GT  */
+    LT = 281,                      /* LT  */
+    NOT = 282,                     /* NOT  */
+    AND = 283,                     /* AND  */
+    OR = 284,                      /* OR  */
+    ADD = 285,                     /* ADD  */
+    SUB = 286,                     /* SUB  */
+    DIV = 287,                     /* DIV  */
+    MULT = 288,                    /* MULT  */
+    ASSIGN = 289,                  /* ASSIGN  */
+    BRACES_OPEN = 290,             /* BRACES_OPEN  */
+    BRACES_CLOSE = 291,            /* BRACES_CLOSE  */
+    BRACKET_OPEN = 292,            /* BRACKET_OPEN  */
+    BRACKET_CLOSE = 293,           /* BRACKET_CLOSE  */
+    DELIM = 294,                   /* DELIM  */
+    COMM = 295,                    /* COMM  */
+    SENTENCE = 296                 /* SENTENCE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -109,48 +110,50 @@ extern int yydebug;
 #define BOOL 264
 #define RET 265
 #define FOR 266
-#define IF 267
-#define ELSE 268
-#define INCLUDE 269
-#define T 270
-#define F 271
-#define NUM 272
-#define REAL 273
-#define ID 274
-#define LE 275
-#define GE 276
-#define EQ 277
-#define NE 278
-#define GT 279
-#define LT 280
-#define NOT 281
-#define AND 282
-#define OR 283
-#define ADD 284
-#define SUB 285
-#define DIV 286
-#define MULT 287
-#define ASSIGN 288
-#define BRACES_OPEN 289
-#define BRACES_CLOSE 290
-#define BRACKET_OPEN 291
-#define BRACKET_CLOSE 292
-#define DELIM 293
-#define COMM 294
-#define SENTENCE 295
+#define POW 267
+#define IF 268
+#define ELSE 269
+#define INCLUDE 270
+#define T 271
+#define F 272
+#define NUM 273
+#define REAL 274
+#define ID 275
+#define LE 276
+#define GE 277
+#define EQ 278
+#define NE 279
+#define GT 280
+#define LT 281
+#define NOT 282
+#define AND 283
+#define OR 284
+#define ADD 285
+#define SUB 286
+#define DIV 287
+#define MULT 288
+#define ASSIGN 289
+#define BRACES_OPEN 290
+#define BRACES_CLOSE 291
+#define BRACKET_OPEN 292
+#define BRACKET_CLOSE 293
+#define DELIM 294
+#define COMM 295
+#define SENTENCE 296
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 35 "parser.y"
+#line 58 "parser.y"
  
 	struct var_name { 
 		char name[100]; 
 		struct node* nd;
+    	float value;
 	} nd_obj; 
 
-#line 154 "y.tab.h"
+#line 157 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
