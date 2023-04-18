@@ -26,8 +26,12 @@
         float value;
         int line_no;
     } symbol_table[100];
-	float temp_val;
     int count=0;
+	int ic_idx=0;
+    int label=0;
+	int temp_var=0;
+    int is_for=0;
+    char icg[50][100];
     int q;
     char type[10];
     extern int countn;
@@ -62,8 +66,22 @@ void fill(char* identifier, float new_value){
 	struct var_name { 
 		char name[100]; 
 		struct node* nd;
-    	float value;
+		float value;
 	} nd_obj; 
+
+    struct var_name2 { 
+			char name[100]; 
+			struct node* nd;
+			char type[10];
+		} nd_obj2; 
+
+
+    struct var_name3 {
+			char name[100];
+			struct node* nd;
+			char if_body[5];
+			char else_body[5];
+		} nd_obj3;
 } 
 
 %token <nd_obj> DOT PRINT SCAN INT FLOAT STRING BOOL RET FOR POW IF ELSE INCLUDE T F NUM REAL ID LE GE EQ NE GT LT NOT AND OR ADD SUB DIV MULT ASSIGN BRACES_OPEN BRACES_CLOSE BRACKET_OPEN BRACKET_CLOSE DELIM COMM SENTENCE
@@ -114,8 +132,8 @@ condition_optional: AND condition { $$.nd = mknode($2.nd, NULL, $1.name); }
 | { $$.nd = NULL; }
 ;
 
-statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($2.nd, $4.nd, "declaration"); $2.value = $4.value;temp_val = $2.value; fill($2.name, $2.value); }
-| ID ASSIGN expression  { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); $1.value = $3.value; fill($1.name, $1.value); char str[100]; sprintf(str, "%s = %s", $1.name, $3.name); strcpy(QUADS[Q], str); Q++; }
+statement: datatype ID { add('V'); } init { $2.nd = mknode(NULL, NULL, $2.name); $$.nd = mknode($2.nd, $4.nd, "declaration"); $2.value = $4.value; fill($2.name, $2.value); sprintf(icg[ic_idx++], "=\t%s\t%f\n", $2.name, $2.value); }
+| ID ASSIGN expression  { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); $1.value = $3.value; fill($1.name, $1.value); char str[100]; sprintf(str, "%s = %d", $1.name, $3.value); strcpy(QUADS[Q], str); Q++; sprintf(icg[ic_idx++], "=\t%s\t%f\n", $1.name, $1.value); }
 | ID relop expression   { $1.nd = mknode(NULL, NULL, $1.name); $$.nd = mknode($1.nd, $3.nd, "="); }
 ;
 
@@ -123,8 +141,8 @@ init: ASSIGN expression { $$.nd = $2.nd; $$.value = $2.value; }
 | { $$.nd = NULL; }
 ;
 
-expression: value arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); $$.value = calculate($1.value, $3.value, $2.name); char str[100]; sprintf(str, "%s = %s %s %s", $$.name, $1.name, $2.name, $3.name); strcpy(QUADS[Q], str); Q++; }
-| value { $$.nd = $1.nd; $$.value = $1.value; char str[100]; sprintf(str, "%s = %s", $$.name, $1.name); strcpy(QUADS[Q], str); Q++; }
+expression: value arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); $$.value = calculate($1.value, $3.value, $2.name); char str[100]; sprintf(str, "%s\t%s\t%s\t%s", $$.name, $1.name, $2.name, $3.name); sprintf(icg[ic_idx++], "%s\t%s\t%s\t%f\n", $2.name, $1.name, $3.name, $$.value); }
+| value { $$.nd = $1.nd; $$.value = $1.value; char str[100]; sprintf(str, "%s = %s", $$.name, $1.name); strcpy(QUADS[Q], str); Q++; sprintf(icg[ic_idx++], "=\t%s\tN/A\t%s\n", $1.name, $$.name); }
 ;
 
 arithmetic: ADD
@@ -204,11 +222,12 @@ int main() {
     printf("\n\n");
 	printBT(head);
 	printf("\n\n");
-	printf("THREE ADDRESS CODE");
+    printf("THREE ADDRESS CODE");
     printf("\n\n");
-	for(int j = 0; j < Q; j++){
-		printf("%s\n", QUADS[j]);
+    for(int i=0; i<ic_idx; i++){
+		printf("%s", icg[i]);
 	}
+    printf("\n\n");
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);
 		free(symbol_table[i].type);
