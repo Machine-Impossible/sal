@@ -8,9 +8,9 @@ Terminals unused in grammar
 
 Rules useless in parser due to conflicts
 
-   19 $@6: %empty
+   21 $@8: %empty
 
-   21 $@7: %empty
+   23 $@9: %empty
 
 
 State 23 conflicts: 1 shift/reduce
@@ -21,13 +21,13 @@ State 51 conflicts: 1 shift/reduce, 1 reduce/reduce
 State 56 conflicts: 1 shift/reduce
 State 86 conflicts: 1 shift/reduce, 1 reduce/reduce
 State 97 conflicts: 1 shift/reduce, 1 reduce/reduce
-State 100 conflicts: 1 shift/reduce
 State 104 conflicts: 1 shift/reduce
+State 105 conflicts: 1 shift/reduce
 State 114 conflicts: 1 shift/reduce, 1 reduce/reduce
-State 117 conflicts: 1 shift/reduce, 1 reduce/reduce
-State 119 conflicts: 1 shift/reduce
-State 123 conflicts: 1 shift/reduce
-State 124 conflicts: 1 shift/reduce, 1 reduce/reduce
+State 118 conflicts: 1 shift/reduce
+State 122 conflicts: 1 shift/reduce, 1 reduce/reduce
+State 123 conflicts: 1 shift/reduce, 1 reduce/reduce
+State 127 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -62,112 +62,116 @@ Grammar
 
    16 $@5: %empty
 
-   17 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else body
-   18     | statement DELIM body
+   17 $@6: %empty
 
-   19 $@6: %empty
+   18 $@7: %empty
 
-   20 body: PRINT $@6 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 else body
+   20     | statement DELIM body
 
-   21 $@7: %empty
+   21 $@8: %empty
 
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
-   23     | %empty
+   22 body: PRINT $@8 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body
 
-   24 $@8: %empty
+   23 $@9: %empty
 
-   25 else: ELSE $@8 BRACES_OPEN body BRACES_CLOSE
-   26     | %empty
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
+   25     | %empty
 
-   27 condition: value relop value condition_optional
-   28          | NOT condition
-   29          | T
-   30          | F
-   31          | value
+   26 $@10: %empty
 
-   32 condition_optional: AND condition
-   33                   | OR condition
-   34                   | %empty
+   27 else: ELSE $@10 BRACES_OPEN body BRACES_CLOSE
+   28     | %empty
 
-   35 $@9: %empty
+   29 condition: value relop value condition_optional
+   30          | NOT condition
+   31          | T
+   32          | F
+   33          | value
 
-   36 statement: datatype ID $@9 init
-   37          | ID ASSIGN expression
-   38          | ID relop expression
+   34 condition_optional: AND condition
+   35                   | OR condition
+   36                   | %empty
 
-   39 init: ASSIGN expression
-   40     | %empty
+   37 $@11: %empty
 
-   41 expression: value arithmetic expression
-   42           | value
+   38 statement: datatype ID $@11 init
+   39          | ID ASSIGN expression
+   40          | ID relop expression
 
-   43 arithmetic: ADD
-   44           | SUB
-   45           | MULT
-   46           | DIV
+   41 init: ASSIGN expression
+   42     | %empty
 
-   47 relop: LT
-   48      | GT
-   49      | LE
-   50      | GE
-   51      | EQ
-   52      | NE
+   43 expression: value arithmetic expression
+   44           | value
 
-   53 value: NUM
-   54      | REAL
-   55      | SENTENCE
-   56      | ID
+   45 arithmetic: ADD
+   46           | SUB
+   47           | MULT
+   48           | DIV
 
-   57 $@10: %empty
+   49 relop: LT
+   50      | GT
+   51      | LE
+   52      | GE
+   53      | EQ
+   54      | NE
 
-   58 return: RET $@10 expression DELIM
+   55 value: NUM
+   56      | REAL
+   57      | SENTENCE
+   58      | ID
+
+   59 $@12: %empty
+
+   60 return: RET $@12 expression DELIM
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '&' (38) 12 22
-    ',' (44) 12 22
+    '&' (38) 12 24
+    ',' (44) 12 24
     error (256)
     DOT <nd_obj> (258)
-    PRINT <nd_obj> (259) 10 20
-    SCAN <nd_obj> (260) 12 22
+    PRINT <nd_obj> (259) 10 22
+    SCAN <nd_obj> (260) 12 24
     INT <nd_obj> (261) 6
     FLOAT <nd_obj> (262) 7
     STRING <nd_obj> (263) 8
     BOOL <nd_obj> (264)
-    RET <nd_obj> (265) 58
+    RET <nd_obj> (265) 60
     FOR <nd_obj> (266) 15
     POW <nd_obj> (267)
-    IF <nd_obj> (268) 17
-    ELSE <nd_obj> (269) 25
+    IF <nd_obj> (268) 19
+    ELSE <nd_obj> (269) 27
     INCLUDE <nd_obj> (270) 3
-    T <nd_obj> (271) 29
-    F <nd_obj> (272) 30
-    NUM <nd_obj> (273) 53
-    REAL <nd_obj> (274) 54
-    ID <nd_obj> (275) 5 12 22 36 37 38 56
-    LE <nd_obj> (276) 49
-    GE <nd_obj> (277) 50
-    EQ <nd_obj> (278) 51
-    NE <nd_obj> (279) 52
-    GT <nd_obj> (280) 48
-    LT <nd_obj> (281) 47
-    NOT <nd_obj> (282) 28
-    AND <nd_obj> (283) 32
-    OR <nd_obj> (284) 33
-    ADD <nd_obj> (285) 43
-    SUB <nd_obj> (286) 44
-    DIV <nd_obj> (287) 46
-    MULT <nd_obj> (288) 45
-    ASSIGN <nd_obj> (289) 37 39
-    BRACES_OPEN <nd_obj> (290) 1 15 17 25
-    BRACES_CLOSE <nd_obj> (291) 1 15 17 25
-    BRACKET_OPEN <nd_obj> (292) 1 10 12 15 17 20 22
-    BRACKET_CLOSE <nd_obj> (293) 1 10 12 15 17 20 22
-    DELIM <nd_obj> (294) 10 12 15 18 20 22 58
+    T <nd_obj> (271) 31
+    F <nd_obj> (272) 32
+    NUM <nd_obj> (273) 55
+    REAL <nd_obj> (274) 56
+    ID <nd_obj> (275) 5 12 24 38 39 40 58
+    LE <nd_obj> (276) 51
+    GE <nd_obj> (277) 52
+    EQ <nd_obj> (278) 53
+    NE <nd_obj> (279) 54
+    GT <nd_obj> (280) 50
+    LT <nd_obj> (281) 49
+    NOT <nd_obj> (282) 30
+    AND <nd_obj> (283) 34
+    OR <nd_obj> (284) 35
+    ADD <nd_obj> (285) 45
+    SUB <nd_obj> (286) 46
+    DIV <nd_obj> (287) 48
+    MULT <nd_obj> (288) 47
+    ASSIGN <nd_obj> (289) 39 41
+    BRACES_OPEN <nd_obj> (290) 1 15 19 27
+    BRACES_CLOSE <nd_obj> (291) 1 15 19 27
+    BRACKET_OPEN <nd_obj> (292) 1 10 12 15 19 22 24
+    BRACKET_CLOSE <nd_obj> (293) 1 10 12 15 19 22 24
+    DELIM <nd_obj> (294) 10 12 15 20 22 24 60
     COMM <nd_obj> (295)
-    SENTENCE <nd_obj> (296) 10 12 20 22 55
+    SENTENCE <nd_obj> (296) 10 12 22 24 57
 
 
 Nonterminals, with rules where they appear
@@ -188,7 +192,7 @@ Nonterminals, with rules where they appear
         on right: 1
     datatype <nd_obj> (49)
         on left: 6 7 8 10 12 13
-        on right: 5 36
+        on right: 5 38
     $@2 (50)
         on left: 9
         on right: 10
@@ -196,59 +200,65 @@ Nonterminals, with rules where they appear
         on left: 11
         on right: 12
     body <nd_obj> (52)
-        on left: 15 17 18 20 22 23
-        on right: 1 10 12 15 17 18 20 22 25
+        on left: 15 19 20 22 24 25
+        on right: 1 10 12 15 19 20 22 24 27
     $@4 (53)
         on left: 14
         on right: 15
     $@5 (54)
         on left: 16
-        on right: 17
+        on right: 19
     $@6 (55)
-        on left: 19
-        on right: 20
+        on left: 17
+        on right: 19
     $@7 (56)
+        on left: 18
+        on right: 19
+    $@8 (57)
         on left: 21
         on right: 22
-    else <nd_obj> (57)
-        on left: 25 26
-        on right: 17
-    $@8 (58)
-        on left: 24
-        on right: 25
-    condition <nd_obj> (59)
-        on left: 27 28 29 30 31
-        on right: 15 17 28 32 33
-    condition_optional <nd_obj> (60)
-        on left: 32 33 34
+    $@9 (58)
+        on left: 23
+        on right: 24
+    else <nd_obj> (59)
+        on left: 27 28
+        on right: 19
+    $@10 (60)
+        on left: 26
         on right: 27
-    statement <nd_obj> (61)
-        on left: 36 37 38
-        on right: 15 18
-    $@9 (62)
-        on left: 35
-        on right: 36
-    init <nd_obj> (63)
-        on left: 39 40
-        on right: 36
-    expression <nd_obj> (64)
+    condition <nd_obj3> (61)
+        on left: 29 30 31 32 33
+        on right: 15 19 30 34 35
+    condition_optional <nd_obj> (62)
+        on left: 34 35 36
+        on right: 29
+    statement <nd_obj> (63)
+        on left: 38 39 40
+        on right: 15 20
+    $@11 (64)
+        on left: 37
+        on right: 38
+    init <nd_obj2> (65)
         on left: 41 42
-        on right: 37 38 39 41 58
-    arithmetic <nd_obj> (65)
-        on left: 43 44 45 46
-        on right: 41
-    relop <nd_obj> (66)
-        on left: 47 48 49 50 51 52
-        on right: 27 38
-    value <nd_obj> (67)
-        on left: 53 54 55 56
-        on right: 27 31 41 42
-    return <nd_obj> (68)
-        on left: 58
+        on right: 38
+    expression <nd_obj2> (66)
+        on left: 43 44
+        on right: 39 40 41 43 60
+    arithmetic <nd_obj> (67)
+        on left: 45 46 47 48
+        on right: 43
+    relop <nd_obj> (68)
+        on left: 49 50 51 52 53 54
+        on right: 29 40
+    value <nd_obj2> (69)
+        on left: 55 56 57 58
+        on right: 29 33 43 44
+    return <nd_obj> (70)
+        on left: 60
         on right: 1
-    $@10 (69)
-        on left: 57
-        on right: 58
+    $@12 (71)
+        on left: 59
+        on right: 60
 
 
 State 0
@@ -450,7 +460,7 @@ State 23
     ID      shift, and go to state 30
 
     ID        [reduce using rule 13 (datatype)]
-    $default  reduce using rule 23 (body)
+    $default  reduce using rule 25 (body)
 
     datatype   go to state 31
     body       go to state 32
@@ -474,27 +484,27 @@ State 25
 State 26
 
    10 datatype: PRINT • $@2 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body
-   20 body: PRINT • $@6 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body
+   22 body: PRINT • $@8 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body
 
     BRACKET_OPEN  reduce using rule 9 ($@2)
-    BRACKET_OPEN  [reduce using rule 19 ($@6)]
+    BRACKET_OPEN  [reduce using rule 21 ($@8)]
     $default      reduce using rule 9 ($@2)
 
     $@2  go to state 14
-    $@6  go to state 36
+    $@8  go to state 36
 
 
 State 27
 
    12 datatype: SCAN • $@3 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
-   22 body: SCAN • $@7 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
+   24 body: SCAN • $@9 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
 
     BRACKET_OPEN  reduce using rule 11 ($@3)
-    BRACKET_OPEN  [reduce using rule 21 ($@7)]
+    BRACKET_OPEN  [reduce using rule 23 ($@9)]
     $default      reduce using rule 11 ($@3)
 
     $@3  go to state 15
-    $@7  go to state 37
+    $@9  go to state 37
 
 
 State 28
@@ -508,7 +518,7 @@ State 28
 
 State 29
 
-   17 body: IF • $@5 BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else body
+   19 body: IF • $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 else body
 
     $default  reduce using rule 16 ($@5)
 
@@ -517,8 +527,8 @@ State 29
 
 State 30
 
-   37 statement: ID • ASSIGN expression
-   38          | ID • relop expression
+   39 statement: ID • ASSIGN expression
+   40          | ID • relop expression
 
     LE      shift, and go to state 40
     GE      shift, and go to state 41
@@ -533,7 +543,7 @@ State 30
 
 State 31
 
-   36 statement: datatype • ID $@9 init
+   38 statement: datatype • ID $@11 init
 
     ID  shift, and go to state 48
 
@@ -549,7 +559,7 @@ State 32
 
 State 33
 
-   18 body: statement • DELIM body
+   20 body: statement • DELIM body
 
     DELIM  shift, and go to state 51
 
@@ -568,7 +578,7 @@ State 34
     ID      shift, and go to state 30
 
     ID  [reduce using rule 13 (datatype)]
-    ID  [reduce using rule 23 (body)]
+    ID  [reduce using rule 25 (body)]
 
     datatype   go to state 31
     body       go to state 52
@@ -584,14 +594,14 @@ State 35
 
 State 36
 
-   20 body: PRINT $@6 • BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body
+   22 body: PRINT $@8 • BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body
 
     BRACKET_OPEN  shift, and go to state 54
 
 
 State 37
 
-   22 body: SCAN $@7 • BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
+   24 body: SCAN $@9 • BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
 
     BRACKET_OPEN  shift, and go to state 55
 
@@ -605,56 +615,56 @@ State 38
 
 State 39
 
-   17 body: IF $@5 • BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else body
+   19 body: IF $@5 • BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 else body
 
     BRACKET_OPEN  shift, and go to state 57
 
 
 State 40
 
-   49 relop: LE •
-
-    $default  reduce using rule 49 (relop)
-
-
-State 41
-
-   50 relop: GE •
-
-    $default  reduce using rule 50 (relop)
-
-
-State 42
-
-   51 relop: EQ •
+   51 relop: LE •
 
     $default  reduce using rule 51 (relop)
 
 
-State 43
+State 41
 
-   52 relop: NE •
+   52 relop: GE •
 
     $default  reduce using rule 52 (relop)
 
 
+State 42
+
+   53 relop: EQ •
+
+    $default  reduce using rule 53 (relop)
+
+
+State 43
+
+   54 relop: NE •
+
+    $default  reduce using rule 54 (relop)
+
+
 State 44
 
-   48 relop: GT •
+   50 relop: GT •
 
-    $default  reduce using rule 48 (relop)
+    $default  reduce using rule 50 (relop)
 
 
 State 45
 
-   47 relop: LT •
+   49 relop: LT •
 
-    $default  reduce using rule 47 (relop)
+    $default  reduce using rule 49 (relop)
 
 
 State 46
 
-   37 statement: ID ASSIGN • expression
+   39 statement: ID ASSIGN • expression
 
     NUM       shift, and go to state 58
     REAL      shift, and go to state 59
@@ -667,7 +677,7 @@ State 46
 
 State 47
 
-   38 statement: ID relop • expression
+   40 statement: ID relop • expression
 
     NUM       shift, and go to state 58
     REAL      shift, and go to state 59
@@ -680,20 +690,20 @@ State 47
 
 State 48
 
-   36 statement: datatype ID • $@9 init
+   38 statement: datatype ID • $@11 init
 
-    $default  reduce using rule 35 ($@9)
+    $default  reduce using rule 37 ($@11)
 
-    $@9  go to state 65
+    $@11  go to state 65
 
 
 State 49
 
-   58 return: RET • $@10 expression DELIM
+   60 return: RET • $@12 expression DELIM
 
-    $default  reduce using rule 57 ($@10)
+    $default  reduce using rule 59 ($@12)
 
-    $@10  go to state 66
+    $@12  go to state 66
 
 
 State 50
@@ -705,7 +715,7 @@ State 50
 
 State 51
 
-   18 body: statement DELIM • body
+   20 body: statement DELIM • body
 
     PRINT   shift, and go to state 26
     SCAN    shift, and go to state 27
@@ -717,8 +727,8 @@ State 51
     ID      shift, and go to state 30
 
     ID        [reduce using rule 13 (datatype)]
-    ID        [reduce using rule 23 (body)]
-    $default  reduce using rule 23 (body)
+    ID        [reduce using rule 25 (body)]
+    $default  reduce using rule 25 (body)
 
     datatype   go to state 31
     body       go to state 68
@@ -741,14 +751,14 @@ State 53
 
 State 54
 
-   20 body: PRINT $@6 BRACKET_OPEN • SENTENCE BRACKET_CLOSE DELIM body
+   22 body: PRINT $@8 BRACKET_OPEN • SENTENCE BRACKET_CLOSE DELIM body
 
     SENTENCE  shift, and go to state 70
 
 
 State 55
 
-   22 body: SCAN $@7 BRACKET_OPEN • SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
+   24 body: SCAN $@9 BRACKET_OPEN • SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body
 
     SENTENCE  shift, and go to state 71
 
@@ -772,7 +782,7 @@ State 56
 
 State 57
 
-   17 body: IF $@5 BRACKET_OPEN • condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else body
+   19 body: IF $@5 BRACKET_OPEN • condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 else body
 
     T         shift, and go to state 73
     F         shift, and go to state 74
@@ -788,75 +798,75 @@ State 57
 
 State 58
 
-   53 value: NUM •
-
-    $default  reduce using rule 53 (value)
-
-
-State 59
-
-   54 value: REAL •
-
-    $default  reduce using rule 54 (value)
-
-
-State 60
-
-   56 value: ID •
-
-    $default  reduce using rule 56 (value)
-
-
-State 61
-
-   55 value: SENTENCE •
+   55 value: NUM •
 
     $default  reduce using rule 55 (value)
 
 
+State 59
+
+   56 value: REAL •
+
+    $default  reduce using rule 56 (value)
+
+
+State 60
+
+   58 value: ID •
+
+    $default  reduce using rule 58 (value)
+
+
+State 61
+
+   57 value: SENTENCE •
+
+    $default  reduce using rule 57 (value)
+
+
 State 62
 
-   37 statement: ID ASSIGN expression •
+   39 statement: ID ASSIGN expression •
 
-    $default  reduce using rule 37 (statement)
+    $default  reduce using rule 39 (statement)
 
 
 State 63
 
-   41 expression: value • arithmetic expression
-   42           | value •
+   43 expression: value • arithmetic expression
+   44           | value •
 
     ADD   shift, and go to state 78
     SUB   shift, and go to state 79
     DIV   shift, and go to state 80
     MULT  shift, and go to state 81
 
-    $default  reduce using rule 42 (expression)
+    $default  reduce using rule 44 (expression)
 
     arithmetic  go to state 82
 
 
 State 64
 
-   38 statement: ID relop expression •
+   40 statement: ID relop expression •
 
-    $default  reduce using rule 38 (statement)
+    $default  reduce using rule 40 (statement)
 
 
 State 65
 
-   36 statement: datatype ID $@9 • init
+   38 statement: datatype ID $@11 • init
 
     ASSIGN  shift, and go to state 83
 
-    $default  reduce using rule 40 (init)
+    $default  reduce using rule 42 (init)
 
     init  go to state 84
 
 
 State 66
 
-   58 return: RET $@10 • expression DELIM
+   60 return: RET $@12 • expression DELIM
 
     NUM       shift, and go to state 58
     REAL      shift, and go to state 59
@@ -876,9 +886,9 @@ State 67
 
 State 68
 
-   18 body: statement DELIM body •
+   20 body: statement DELIM body •
 
-    $default  reduce using rule 18 (body)
+    $default  reduce using rule 20 (body)
 
 
 State 69
@@ -890,14 +900,14 @@ State 69
 
 State 70
 
-   20 body: PRINT $@6 BRACKET_OPEN SENTENCE • BRACKET_CLOSE DELIM body
+   22 body: PRINT $@8 BRACKET_OPEN SENTENCE • BRACKET_CLOSE DELIM body
 
     BRACKET_CLOSE  shift, and go to state 87
 
 
 State 71
 
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE • ',' '&' ID BRACKET_CLOSE DELIM body
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE • ',' '&' ID BRACKET_CLOSE DELIM body
 
     ','  shift, and go to state 88
 
@@ -911,21 +921,21 @@ State 72
 
 State 73
 
-   29 condition: T •
+   31 condition: T •
 
-    $default  reduce using rule 29 (condition)
+    $default  reduce using rule 31 (condition)
 
 
 State 74
 
-   30 condition: F •
+   32 condition: F •
 
-    $default  reduce using rule 30 (condition)
+    $default  reduce using rule 32 (condition)
 
 
 State 75
 
-   28 condition: NOT • condition
+   30 condition: NOT • condition
 
     T         shift, and go to state 73
     F         shift, and go to state 74
@@ -941,15 +951,15 @@ State 75
 
 State 76
 
-   17 body: IF $@5 BRACKET_OPEN condition • BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else body
+   19 body: IF $@5 BRACKET_OPEN condition • BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 else body
 
     BRACKET_CLOSE  shift, and go to state 91
 
 
 State 77
 
-   27 condition: value • relop value condition_optional
-   31          | value •
+   29 condition: value • relop value condition_optional
+   33          | value •
 
     LE  shift, and go to state 40
     GE  shift, and go to state 41
@@ -958,42 +968,42 @@ State 77
     GT  shift, and go to state 44
     LT  shift, and go to state 45
 
-    $default  reduce using rule 31 (condition)
+    $default  reduce using rule 33 (condition)
 
     relop  go to state 92
 
 
 State 78
 
-   43 arithmetic: ADD •
-
-    $default  reduce using rule 43 (arithmetic)
-
-
-State 79
-
-   44 arithmetic: SUB •
-
-    $default  reduce using rule 44 (arithmetic)
-
-
-State 80
-
-   46 arithmetic: DIV •
-
-    $default  reduce using rule 46 (arithmetic)
-
-
-State 81
-
-   45 arithmetic: MULT •
+   45 arithmetic: ADD •
 
     $default  reduce using rule 45 (arithmetic)
 
 
+State 79
+
+   46 arithmetic: SUB •
+
+    $default  reduce using rule 46 (arithmetic)
+
+
+State 80
+
+   48 arithmetic: DIV •
+
+    $default  reduce using rule 48 (arithmetic)
+
+
+State 81
+
+   47 arithmetic: MULT •
+
+    $default  reduce using rule 47 (arithmetic)
+
+
 State 82
 
-   41 expression: value arithmetic • expression
+   43 expression: value arithmetic • expression
 
     NUM       shift, and go to state 58
     REAL      shift, and go to state 59
@@ -1006,7 +1016,7 @@ State 82
 
 State 83
 
-   39 init: ASSIGN • expression
+   41 init: ASSIGN • expression
 
     NUM       shift, and go to state 58
     REAL      shift, and go to state 59
@@ -1019,14 +1029,14 @@ State 83
 
 State 84
 
-   36 statement: datatype ID $@9 init •
+   38 statement: datatype ID $@11 init •
 
-    $default  reduce using rule 36 (statement)
+    $default  reduce using rule 38 (statement)
 
 
 State 85
 
-   58 return: RET $@10 expression • DELIM
+   60 return: RET $@12 expression • DELIM
 
     DELIM  shift, and go to state 95
 
@@ -1045,7 +1055,7 @@ State 86
     ID      shift, and go to state 30
 
     ID  [reduce using rule 13 (datatype)]
-    ID  [reduce using rule 23 (body)]
+    ID  [reduce using rule 25 (body)]
 
     datatype   go to state 31
     body       go to state 96
@@ -1054,14 +1064,14 @@ State 86
 
 State 87
 
-   20 body: PRINT $@6 BRACKET_OPEN SENTENCE BRACKET_CLOSE • DELIM body
+   22 body: PRINT $@8 BRACKET_OPEN SENTENCE BRACKET_CLOSE • DELIM body
 
     DELIM  shift, and go to state 97
 
 
 State 88
 
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE ',' • '&' ID BRACKET_CLOSE DELIM body
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE ',' • '&' ID BRACKET_CLOSE DELIM body
 
     '&'  shift, and go to state 98
 
@@ -1084,21 +1094,23 @@ State 89
 
 State 90
 
-   28 condition: NOT condition •
+   30 condition: NOT condition •
 
-    $default  reduce using rule 28 (condition)
+    $default  reduce using rule 30 (condition)
 
 
 State 91
 
-   17 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE • BRACES_OPEN body BRACES_CLOSE else body
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE • $@6 BRACES_OPEN body BRACES_CLOSE $@7 else body
 
-    BRACES_OPEN  shift, and go to state 100
+    $default  reduce using rule 17 ($@6)
+
+    $@6  go to state 100
 
 
 State 92
 
-   27 condition: value relop • value condition_optional
+   29 condition: value relop • value condition_optional
 
     NUM       shift, and go to state 58
     REAL      shift, and go to state 59
@@ -1110,23 +1122,23 @@ State 92
 
 State 93
 
-   41 expression: value arithmetic expression •
+   43 expression: value arithmetic expression •
 
-    $default  reduce using rule 41 (expression)
+    $default  reduce using rule 43 (expression)
 
 
 State 94
 
-   39 init: ASSIGN expression •
+   41 init: ASSIGN expression •
 
-    $default  reduce using rule 39 (init)
+    $default  reduce using rule 41 (init)
 
 
 State 95
 
-   58 return: RET $@10 expression DELIM •
+   60 return: RET $@12 expression DELIM •
 
-    $default  reduce using rule 58 (return)
+    $default  reduce using rule 60 (return)
 
 
 State 96
@@ -1138,7 +1150,7 @@ State 96
 
 State 97
 
-   20 body: PRINT $@6 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM • body
+   22 body: PRINT $@8 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM • body
 
     PRINT   shift, and go to state 26
     SCAN    shift, and go to state 27
@@ -1150,8 +1162,8 @@ State 97
     ID      shift, and go to state 30
 
     ID        [reduce using rule 13 (datatype)]
-    ID        [reduce using rule 23 (body)]
-    $default  reduce using rule 23 (body)
+    ID        [reduce using rule 25 (body)]
+    $default  reduce using rule 25 (body)
 
     datatype   go to state 31
     body       go to state 102
@@ -1160,7 +1172,7 @@ State 97
 
 State 98
 
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE ',' '&' • ID BRACKET_CLOSE DELIM body
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE ',' '&' • ID BRACKET_CLOSE DELIM body
 
     ID  shift, and go to state 103
 
@@ -1174,47 +1186,33 @@ State 99
 
 State 100
 
-   17 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN • body BRACES_CLOSE else body
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 • BRACES_OPEN body BRACES_CLOSE $@7 else body
 
-    PRINT   shift, and go to state 26
-    SCAN    shift, and go to state 27
-    INT     shift, and go to state 8
-    FLOAT   shift, and go to state 9
-    STRING  shift, and go to state 10
-    FOR     shift, and go to state 28
-    IF      shift, and go to state 29
-    ID      shift, and go to state 30
-
-    ID        [reduce using rule 13 (datatype)]
-    $default  reduce using rule 23 (body)
-
-    datatype   go to state 31
-    body       go to state 105
-    statement  go to state 33
+    BRACES_OPEN  shift, and go to state 105
 
 
 State 101
 
-   27 condition: value relop value • condition_optional
+   29 condition: value relop value • condition_optional
 
     AND  shift, and go to state 106
     OR   shift, and go to state 107
 
-    $default  reduce using rule 34 (condition_optional)
+    $default  reduce using rule 36 (condition_optional)
 
     condition_optional  go to state 108
 
 
 State 102
 
-   20 body: PRINT $@6 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body •
+   22 body: PRINT $@8 BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body •
 
-    $default  reduce using rule 20 (body)
+    $default  reduce using rule 22 (body)
 
 
 State 103
 
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE ',' '&' ID • BRACKET_CLOSE DELIM body
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE ',' '&' ID • BRACKET_CLOSE DELIM body
 
     BRACKET_CLOSE  shift, and go to state 109
 
@@ -1238,14 +1236,28 @@ State 104
 
 State 105
 
-   17 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body • BRACES_CLOSE else body
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN • body BRACES_CLOSE $@7 else body
 
-    BRACES_CLOSE  shift, and go to state 111
+    PRINT   shift, and go to state 26
+    SCAN    shift, and go to state 27
+    INT     shift, and go to state 8
+    FLOAT   shift, and go to state 9
+    STRING  shift, and go to state 10
+    FOR     shift, and go to state 28
+    IF      shift, and go to state 29
+    ID      shift, and go to state 30
+
+    ID        [reduce using rule 13 (datatype)]
+    $default  reduce using rule 25 (body)
+
+    datatype   go to state 31
+    body       go to state 111
+    statement  go to state 33
 
 
 State 106
 
-   32 condition_optional: AND • condition
+   34 condition_optional: AND • condition
 
     T         shift, and go to state 73
     F         shift, and go to state 74
@@ -1261,7 +1273,7 @@ State 106
 
 State 107
 
-   33 condition_optional: OR • condition
+   35 condition_optional: OR • condition
 
     T         shift, and go to state 73
     F         shift, and go to state 74
@@ -1277,14 +1289,14 @@ State 107
 
 State 108
 
-   27 condition: value relop value condition_optional •
+   29 condition: value relop value condition_optional •
 
-    $default  reduce using rule 27 (condition)
+    $default  reduce using rule 29 (condition)
 
 
 State 109
 
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE • DELIM body
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE • DELIM body
 
     DELIM  shift, and go to state 114
 
@@ -1298,32 +1310,28 @@ State 110
 
 State 111
 
-   17 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE • else body
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body • BRACES_CLOSE $@7 else body
 
-    ELSE  shift, and go to state 116
-
-    $default  reduce using rule 26 (else)
-
-    else  go to state 117
+    BRACES_CLOSE  shift, and go to state 116
 
 
 State 112
 
-   32 condition_optional: AND condition •
+   34 condition_optional: AND condition •
 
-    $default  reduce using rule 32 (condition_optional)
+    $default  reduce using rule 34 (condition_optional)
 
 
 State 113
 
-   33 condition_optional: OR condition •
+   35 condition_optional: OR condition •
 
-    $default  reduce using rule 33 (condition_optional)
+    $default  reduce using rule 35 (condition_optional)
 
 
 State 114
 
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM • body
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM • body
 
     PRINT   shift, and go to state 26
     SCAN    shift, and go to state 27
@@ -1335,11 +1343,11 @@ State 114
     ID      shift, and go to state 30
 
     ID        [reduce using rule 13 (datatype)]
-    ID        [reduce using rule 23 (body)]
-    $default  reduce using rule 23 (body)
+    ID        [reduce using rule 25 (body)]
+    $default  reduce using rule 25 (body)
 
     datatype   go to state 31
-    body       go to state 118
+    body       go to state 117
     statement  go to state 33
 
 
@@ -1347,48 +1355,26 @@ State 115
 
    15 body: FOR $@4 BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE • BRACES_OPEN body BRACES_CLOSE body
 
-    BRACES_OPEN  shift, and go to state 119
+    BRACES_OPEN  shift, and go to state 118
 
 
 State 116
 
-   25 else: ELSE • $@8 BRACES_OPEN body BRACES_CLOSE
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE • $@7 else body
 
-    $default  reduce using rule 24 ($@8)
+    $default  reduce using rule 18 ($@7)
 
-    $@8  go to state 120
+    $@7  go to state 119
 
 
 State 117
 
-   17 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else • body
+   24 body: SCAN $@9 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body •
 
-    PRINT   shift, and go to state 26
-    SCAN    shift, and go to state 27
-    INT     shift, and go to state 8
-    FLOAT   shift, and go to state 9
-    STRING  shift, and go to state 10
-    FOR     shift, and go to state 28
-    IF      shift, and go to state 29
-    ID      shift, and go to state 30
-
-    ID        [reduce using rule 13 (datatype)]
-    ID        [reduce using rule 23 (body)]
-    $default  reduce using rule 23 (body)
-
-    datatype   go to state 31
-    body       go to state 121
-    statement  go to state 33
+    $default  reduce using rule 24 (body)
 
 
 State 118
-
-   22 body: SCAN $@7 BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body •
-
-    $default  reduce using rule 22 (body)
-
-
-State 119
 
    15 body: FOR $@4 BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE BRACES_OPEN • body BRACES_CLOSE body
 
@@ -1402,37 +1388,43 @@ State 119
     ID      shift, and go to state 30
 
     ID        [reduce using rule 13 (datatype)]
-    $default  reduce using rule 23 (body)
+    $default  reduce using rule 25 (body)
 
     datatype   go to state 31
-    body       go to state 122
+    body       go to state 120
     statement  go to state 33
+
+
+State 119
+
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 • else body
+
+    ELSE  shift, and go to state 121
+
+    $default  reduce using rule 28 (else)
+
+    else  go to state 122
 
 
 State 120
 
-   25 else: ELSE $@8 • BRACES_OPEN body BRACES_CLOSE
+   15 body: FOR $@4 BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE BRACES_OPEN body • BRACES_CLOSE body
 
-    BRACES_OPEN  shift, and go to state 123
+    BRACES_CLOSE  shift, and go to state 123
 
 
 State 121
 
-   17 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else body •
+   27 else: ELSE • $@10 BRACES_OPEN body BRACES_CLOSE
 
-    $default  reduce using rule 17 (body)
+    $default  reduce using rule 26 ($@10)
+
+    $@10  go to state 124
 
 
 State 122
 
-   15 body: FOR $@4 BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE BRACES_OPEN body • BRACES_CLOSE body
-
-    BRACES_CLOSE  shift, and go to state 124
-
-
-State 123
-
-   25 else: ELSE $@8 BRACES_OPEN • body BRACES_CLOSE
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 else • body
 
     PRINT   shift, and go to state 26
     SCAN    shift, and go to state 27
@@ -1444,14 +1436,15 @@ State 123
     ID      shift, and go to state 30
 
     ID        [reduce using rule 13 (datatype)]
-    $default  reduce using rule 23 (body)
+    ID        [reduce using rule 25 (body)]
+    $default  reduce using rule 25 (body)
 
     datatype   go to state 31
     body       go to state 125
     statement  go to state 33
 
 
-State 124
+State 123
 
    15 body: FOR $@4 BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE • body
 
@@ -1465,19 +1458,26 @@ State 124
     ID      shift, and go to state 30
 
     ID        [reduce using rule 13 (datatype)]
-    ID        [reduce using rule 23 (body)]
-    $default  reduce using rule 23 (body)
+    ID        [reduce using rule 25 (body)]
+    $default  reduce using rule 25 (body)
 
     datatype   go to state 31
     body       go to state 126
     statement  go to state 33
 
 
+State 124
+
+   27 else: ELSE $@10 • BRACES_OPEN body BRACES_CLOSE
+
+    BRACES_OPEN  shift, and go to state 127
+
+
 State 125
 
-   25 else: ELSE $@8 BRACES_OPEN body • BRACES_CLOSE
+   19 body: IF $@5 BRACKET_OPEN condition BRACKET_CLOSE $@6 BRACES_OPEN body BRACES_CLOSE $@7 else body •
 
-    BRACES_CLOSE  shift, and go to state 127
+    $default  reduce using rule 19 (body)
 
 
 State 126
@@ -1489,6 +1489,34 @@ State 126
 
 State 127
 
-   25 else: ELSE $@8 BRACES_OPEN body BRACES_CLOSE •
+   27 else: ELSE $@10 BRACES_OPEN • body BRACES_CLOSE
 
-    $default  reduce using rule 25 (else)
+    PRINT   shift, and go to state 26
+    SCAN    shift, and go to state 27
+    INT     shift, and go to state 8
+    FLOAT   shift, and go to state 9
+    STRING  shift, and go to state 10
+    FOR     shift, and go to state 28
+    IF      shift, and go to state 29
+    ID      shift, and go to state 30
+
+    ID        [reduce using rule 13 (datatype)]
+    $default  reduce using rule 25 (body)
+
+    datatype   go to state 31
+    body       go to state 128
+    statement  go to state 33
+
+
+State 128
+
+   27 else: ELSE $@10 BRACES_OPEN body • BRACES_CLOSE
+
+    BRACES_CLOSE  shift, and go to state 129
+
+
+State 129
+
+   27 else: ELSE $@10 BRACES_OPEN body BRACES_CLOSE •
+
+    $default  reduce using rule 27 (else)

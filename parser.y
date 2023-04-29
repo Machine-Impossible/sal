@@ -73,6 +73,7 @@ void fill(char* identifier, float new_value){
 			char name[100]; 
 			struct node* nd;
 			char type[10];
+			float value;
 		} nd_obj2; 
 
 
@@ -81,12 +82,14 @@ void fill(char* identifier, float new_value){
 			struct node* nd;
 			char if_body[5];
 			char else_body[5];
+			float value;
 		} nd_obj3;
 } 
 
 %token <nd_obj> DOT PRINT SCAN INT FLOAT STRING BOOL RET FOR POW IF ELSE INCLUDE T F NUM REAL ID LE GE EQ NE GT LT NOT AND OR ADD SUB DIV MULT ASSIGN BRACES_OPEN BRACES_CLOSE BRACKET_OPEN BRACKET_CLOSE DELIM COMM SENTENCE
-%type <nd_obj> program headers main statement condition condition_optional datatype body else init expression arithmetic relop value return
-
+%type <nd_obj> program headers main statement condition_optional datatype body else arithmetic relop return
+%type <nd_obj2> init value expression
+%type <nd_obj3> condition
 %%
 program: headers main BRACKET_OPEN BRACKET_CLOSE BRACES_OPEN body return BRACES_CLOSE { $2.nd = mknode($6.nd, $7.nd, "main"); $$.nd = mknode($1.nd, $2.nd, "program"); head = $$.nd; }
 ;
@@ -109,7 +112,7 @@ datatype: INT { insert_type(); }
 ;
 
 body: FOR { add('K'); } BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE body
-| IF { add('K'); } BRACKET_OPEN condition BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE else body
+| IF { add('K'); is_for = 0; } BRACKET_OPEN condition BRACKET_CLOSE { sprintf(icg[ic_idx++], "\nLABEL %s:\n", $4.if_body); } BRACES_OPEN body BRACES_CLOSE { sprintf(icg[ic_idx++], "\nLABEL %s:\n", $4.else_body); } else body { struct node *iff = mknode($4.nd, $8.nd, $1.name); $$.nd = mknode(iff, $11.nd, "if-else"); sprintf(icg[ic_idx++], "GOTO next\n"); }
 | statement DELIM body { $$.nd = mknode($1.nd, $3.nd, "bline"); }
 | PRINT { add('K'); } BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body { $$.nd = mknode(NULL, NULL, "printf"); }
 | SCAN { add('K'); } BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body { $$.nd = mknode(NULL, NULL, "scanf"); }
@@ -120,7 +123,19 @@ else: ELSE { add('K'); } BRACES_OPEN body BRACES_CLOSE { $$.nd = mknode(NULL, $4
 | { $$.nd = NULL; }
 ;
 
-condition: value relop value condition_optional { $$.nd = mknode($1.nd, $3.nd, $2.name); }
+condition: value relop value condition_optional { 
+	$$.nd = mknode($1.nd, $3.nd, $2.name); 
+	if(is_for) {
+		sprintf($$.if_body, "L%d", label++);
+		sprintf(icg[ic_idx++], "\nLABEL %s:\n", $$.if_body);
+		sprintf(icg[ic_idx++], "\nif NOT (%s %s %s) GOTO L%d\n", $1.name, $2.name, $3.name, label);
+		sprintf($$.else_body, "L%d", label++);
+	} else {
+		sprintf(icg[ic_idx++], "\nif (%s %s %s) GOTO L%d else GOTO L%d\n", $1.name, $2.name, $3.name, label, label+1);
+		sprintf($$.if_body, "L%d", label++);
+		sprintf($$.else_body, "L%d", label++);
+	}
+}
 | NOT condition { $1.nd = mknode(NULL,NULL,$1.name); $$.nd = mknode($1.nd, $2.nd, "condition"); }
 | T { add('K'); $$.nd = NULL; }
 | F { add('K'); $$.nd = NULL; }
@@ -142,7 +157,7 @@ init: ASSIGN expression { $$.nd = $2.nd; $$.value = $2.value; }
 ;
 
 expression: value arithmetic expression { $$.nd = mknode($1.nd, $3.nd, $2.name); $$.value = calculate($1.value, $3.value, $2.name); char str[100]; sprintf(str, "%s\t%s\t%s\t%s", $$.name, $1.name, $2.name, $3.name); sprintf(icg[ic_idx++], "%s\t%s\t%s\t%f\n", $2.name, $1.name, $3.name, $$.value); }
-| value { $$.nd = $1.nd; $$.value = $1.value; char str[100]; sprintf(str, "%s = %s", $$.name, $1.name); strcpy(QUADS[Q], str); Q++; sprintf(icg[ic_idx++], "=\t%s\tN/A\t%s\n", $1.name, $$.name); }
+| value { $$.nd = $1.nd; $$.value = $1.value; char str[100]; sprintf(str, "%s = %s", $$.name, $1.name); strcpy(QUADS[Q], str); Q++; /*sprintf(icg[ic_idx++], "=\t%s\tN/A\t%s\n", $1.name, $$.name); */}
 ;
 
 arithmetic: ADD

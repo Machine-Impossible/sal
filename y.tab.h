@@ -157,6 +157,7 @@ union YYSTYPE
 			char name[100]; 
 			struct node* nd;
 			char type[10];
+			float value;
 		} nd_obj2; 
 
 
@@ -165,9 +166,10 @@ union YYSTYPE
 			struct node* nd;
 			char if_body[5];
 			char else_body[5];
+			float value;
 		} nd_obj3;
 
-#line 171 "y.tab.h"
+#line 173 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
