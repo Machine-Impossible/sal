@@ -22,7 +22,7 @@ digit [0-9]
 "@"	                        { strcpy(yylval.nd_obj.name,(yytext)); printf("FOR\t");  return FOR; }
 "?"	                        { strcpy(yylval.nd_obj.name,(yytext)); printf("IF\t");  return IF; }
 ":"	                        { strcpy(yylval.nd_obj.name,(yytext)); printf("ELSE\t");  return ELSE; }
-^<{alpha}({alpha}|{digit})*.sala> { strcpy(yylval.nd_obj.name,(yytext)); printf("INCLUDE\n");  return INCLUDE; }
+^<{alpha}({alpha}|{digit})*.sal> { strcpy(yylval.nd_obj.name,(yytext)); printf("INCLUDE\n");  return INCLUDE; }
 "True"                      { strcpy(yylval.nd_obj.name,(yytext)); printf("T\t");  return T; }
 "False"                     { strcpy(yylval.nd_obj.name,(yytext)); printf("F\t");  return F; }
 {digit}+                    { strcpy(yylval.nd_obj.name,(yytext)); printf("NUM\t");  return NUM; }

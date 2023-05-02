@@ -26,6 +26,7 @@
         float value;
         int line_no;
     } symbol_table[100];
+	int start = 100;
     int count=0;
 	int ic_idx=0;
     int label=0;
@@ -52,13 +53,27 @@ float calculate(float operand_1, float operand_2, char* operator){
     return operand_1 * operand_2;
   } else if(strcmp(operator, "/") == 0){
     return operand_1 / operand_2;
-  }
+  } else if(strcmp(operator, "==") == 0) {
+	return operand_1 == operand_2;
+  } else if(strcmp(operator, "!=") == 0) {
+	return operand_1 != operand_2;
+  } else if(strcmp(operator, "<") == 0) {
+	return operand_1 < operand_2;
+  } else if(strcmp(operator, ">") == 0) {
+	return operand_1 > operand_2;
+  }  else if(strcmp(operator, "<=") == 0) {
+	return operand_1 <= operand_2;
+  } else if(strcmp(operator, ">=") == 0) {
+	return operand_1 >= operand_2;
+  } 
 }
 
 void fill(char* identifier, float new_value){
 	int index = search(identifier);
 	symbol_table[index].value = new_value;
 }
+
+char *separator = "\n______________________________________________\n";
 
 %}
 
@@ -111,11 +126,18 @@ datatype: INT { insert_type(); }
 | { $$.nd = NULL; }
 ;
 
-body: FOR { add('K'); } BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE body
-| IF { add('K'); is_for = 0; } BRACKET_OPEN condition BRACKET_CLOSE { sprintf(icg[ic_idx++], "\nLABEL %s:\n", $4.if_body); } BRACES_OPEN body BRACES_CLOSE { sprintf(icg[ic_idx++], "\nLABEL %s:\n", $4.else_body); } else body { struct node *iff = mknode($4.nd, $8.nd, $1.name); $$.nd = mknode(iff, $11.nd, "if-else"); sprintf(icg[ic_idx++], "GOTO next\n"); }
-| statement DELIM body { $$.nd = mknode($1.nd, $3.nd, "bline"); }
+body: FOR { add('K'); is_for = 1; } BRACKET_OPEN statement DELIM condition DELIM statement BRACKET_CLOSE BRACES_OPEN body BRACES_CLOSE body { 
+	struct node *temp = mknode($6.nd, $8.nd, "CONDITION"); 
+	struct node *temp2 = mknode($4.nd, temp, "CONDITION"); 
+	$$.nd = mknode(temp2, $11.nd, $1.name); 
+	sprintf(icg[ic_idx++], "JUMP to %s\n", $6.if_body);
+	sprintf(icg[ic_idx++], "%s", separator);
+	sprintf(icg[ic_idx++], "\nLABEL %s:\n", $6.else_body);
+ }
+| IF { add('K'); is_for = 0; } BRACKET_OPEN condition BRACKET_CLOSE { sprintf(icg[ic_idx++], "%s", separator); sprintf(icg[ic_idx++], "\nLABEL %s:\n", $4.if_body); } BRACES_OPEN body BRACES_CLOSE { sprintf(icg[ic_idx++], "%s", separator); sprintf(icg[ic_idx++], "\nLABEL %s:\n", $4.else_body); } else body { struct node *iff = mknode($4.nd, $8.nd, $1.name); $$.nd = mknode(iff, $11.nd, "if-else"); sprintf(icg[ic_idx++], "GOTO next\n"); }
+| statement DELIM body { $$.nd = mknode($1.nd, $3.nd, "bline"); } 
 | PRINT { add('K'); } BRACKET_OPEN SENTENCE BRACKET_CLOSE DELIM body { $$.nd = mknode(NULL, NULL, "printf"); }
-| SCAN { add('K'); } BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM body { $$.nd = mknode(NULL, NULL, "scanf"); }
+| SCAN { add('K'); } BRACKET_OPEN SENTENCE ',' '&' ID BRACKET_CLOSE DELIM  body { $$.nd = mknode(NULL, NULL, "scanf"); } 
 | { $$.nd = NULL; }
 ;
 
@@ -127,14 +149,17 @@ condition: value relop value condition_optional {
 	$$.nd = mknode($1.nd, $3.nd, $2.name); 
 	if(is_for) {
 		sprintf($$.if_body, "L%d", label++);
+		sprintf(icg[ic_idx++], "%s", separator);
 		sprintf(icg[ic_idx++], "\nLABEL %s:\n", $$.if_body);
 		sprintf(icg[ic_idx++], "\nif NOT (%s %s %s) GOTO L%d\n", $1.name, $2.name, $3.name, label);
 		sprintf($$.else_body, "L%d", label++);
 	} else {
+		sprintf(icg[ic_idx++], "%s", separator);
 		sprintf(icg[ic_idx++], "\nif (%s %s %s) GOTO L%d else GOTO L%d\n", $1.name, $2.name, $3.name, label, label+1);
 		sprintf($$.if_body, "L%d", label++);
 		sprintf($$.else_body, "L%d", label++);
 	}
+	$$.value = calculate($1.value, $3.value, $2.name);
 }
 | NOT condition { $1.nd = mknode(NULL,NULL,$1.name); $$.nd = mknode($1.nd, $2.nd, "condition"); }
 | T { add('K'); $$.nd = NULL; }
@@ -167,7 +192,7 @@ arithmetic: ADD
 ;
 
     
-relop: LT
+relop: LT 
 | GT
 | LE
 | GE
@@ -225,7 +250,7 @@ int main() {
 	printf("SYMBOL TABLE");
     printf("\n\n");
 	printf("\nSYMBOL   DATATYPE   TYPE   LINE NUMBER  VALUE\n");
-	printf("______________________________________________\n\n");
+	printf("%s", separator);
 	int i=0;
 	for(i=0; i<count; i++) {
 		printf("%s\t%s\t%s\t%d\t", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no);
@@ -238,11 +263,11 @@ int main() {
 	printBT(head);
 	printf("\n\n");
     printf("THREE ADDRESS CODE");
-    printf("\n\n");
+	printf("\n%s\n", separator);
     for(int i=0; i<ic_idx; i++){
 		printf("%s", icg[i]);
 	}
-    printf("\n\n");
+	printf("%s\n", separator);
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);
 		free(symbol_table[i].type);
@@ -265,7 +290,6 @@ int search(char *type) {
 void add(char c) {
 
   q=search(yytext);
-  /* printf("%d %c\n",q,c); */
   if(q == -1) {
     if(c == 'H') {
 			symbol_table[count].id_name=strdup(yytext);

@@ -1,12 +1,16 @@
-<he.sala> # main() { 
-    $ aasish = 6.2 + 4; 
-    aasish = aasish - 4;
+<he.sal> # main() { 
+    $ aasish = 6.2 + 4 * 2; 
     # skandan = 8 - 3;
     ?(aasish < 20) {
-        aasish = aasish - 20;
         # loka = 16;
+        ?(loka == 44){
+            ash = 01;
+        }
     } : {
         skandan = skandan * 3;
+    }
+    @(# i = 0; i < 2; i = i + 1){
+        loka = loka + 33;
     }
     '5;
 }
