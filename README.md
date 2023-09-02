@@ -32,8 +32,8 @@ sudo apt-get install bison flex
 **Clone the Repository**:
 
 ```shell
-git clone https://github.com/Machine-Impossible/sala.git
-cd sala
+git clone https://github.com/Machine-Impossible/sal.git
+cd sal
 ```
 
 ### Running the project
@@ -43,3 +43,5 @@ Make sure you write the input in sala lang in the **example.sal** and run from t
 ```shell
 ./runsal.sh
 ```
+
+Please do checkout out full report of this project <a href="https://github.com/Machine-Impossible/sal/blob/main/SAL.pdf">here</a>
