@@ -1987,7 +1987,7 @@ void printBT(struct node* ptr) {
 
 
 int main() {
-    FILE *myfile = fopen("eg.bs", "r");
+    FILE *myfile = fopen("example.sal", "r");
     if (!myfile) {
     	printf("Cant open the file\n");
     	return -1;
